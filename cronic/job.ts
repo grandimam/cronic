@@ -1,23 +1,13 @@
 type JobFunc = (() => void) | null
 
-export enum Unit {
-    DAY,
-    HOUR,
-    SECOND,
-    MINUTE
-}
-
-
 export class Job {
     public func: JobFunc
-    public unit: Unit | null
+    public interval: number
     public lastRun: number | null
     public nextRun: number | null
-    public interval: number | null
 
-    constructor(interval: number | null = null, unit: Unit | null = null) {
+    constructor(interval: number) {
         this.func = null
-        this.unit = unit
         this.nextRun = null
         this.lastRun = null
         this.interval = interval
@@ -30,33 +20,24 @@ export class Job {
 
     public run(): any {
         const result = this.func ? this.func() : null
-        // then, set the next run
-        this.nextRun = new Date(new Date().getTime() + this.getIntervalInMs()).getTime()
+        this.nextRun = new Date(new Date().getTime() + this.interval).getTime()
         console.log("Time scheduled for next run: ", this.nextRun)
         return result
     }
 
-    private getIntervalInMs() {
-        if (this.unit === Unit.SECOND) {
-            return this.second()
-        } else if (this.unit === Unit.MINUTE) {
-            return this.minute()
-        } else if (this.unit === Unit.HOUR) {
-            return this.hour()
-        }
-        return 1
+    public hour(): Job {
+        this.interval = this.interval * 3600000
+        return this
     }
 
-    private hour() {
-        return this.unit === Unit.MINUTE && this.interval ? this.interval * 3600000: 1
+    public second(): Job {
+        this.interval = this.interval * 1000
+        return this
     }
 
-    private second() {
-        return this.unit === Unit.SECOND && this.interval ? this.interval * 1000: 1
-    }
-
-    private minute() {
-        return this.unit === Unit.MINUTE && this.interval ? this.interval * 60000: 1
+    public minute(): Job {
+        this.interval = this.interval * 60000
+        return this
     }
 
     public do(func: JobFunc) {

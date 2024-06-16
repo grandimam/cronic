@@ -1,4 +1,3 @@
-import { Unit } from "./job"
 import { Scheduler } from "./schedule"
 
 function hello() {
@@ -6,7 +5,7 @@ function hello() {
 }
 
 const schedule = new Scheduler()
-schedule.every(1, Unit.SECOND).do(hello)
+schedule.every(10).second().do(hello)
 
 while (true) {
     schedule.runPending()

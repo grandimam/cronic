@@ -8,8 +8,8 @@ export class Scheduler {
         this.jobs = []
     }
 
-    public every(interval: number | null = null, unit: Unit | null = null): Job {
-        let job = new Job(interval, unit)
+    public every(interval: number | null = null): Job {
+        let job = new Job(interval)
         this.jobs.push(job)
         return job
     }
