@@ -1,6 +1,6 @@
 # cronic
 
-Cron-job for Humans in Typescript
+Cron-job library for humans in Typescript
 
 # Usage
 
