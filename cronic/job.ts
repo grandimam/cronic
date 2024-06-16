@@ -25,19 +25,16 @@ export class Job {
 
     public shouldRun(): boolean {
         const now = new Date().getTime()
-        return this.nextRun !== null ? now >= this.nextRun : false
+        return this.nextRun === null || now >= this.nextRun ? true : false
     }
 
     public run(): any {
-        let r = this.func ? this.func() : null
-        this.setNextRun()
-        return r
+        const result = this.func ? this.func() : null
+        // then, set the next run
+        this.nextRun = new Date(new Date().getTime() + this.getIntervalInMs()).getTime()
+        console.log("Time scheduled for next run: ", this.nextRun)
+        return result
     }
-
-    private setNextRun(): void {
-        let now = new Date()
-        this.nextRun = new Date(now.getTime() + this.getIntervalInMs()).getTime()
-    } 
 
     private getIntervalInMs() {
         if (this.unit === Unit.SECOND) {
@@ -64,8 +61,5 @@ export class Job {
 
     public do(func: JobFunc) {
         this.func = func
-        if (this.func !== null) {
-            this.func()
-        }
     }
 }

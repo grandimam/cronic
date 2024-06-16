@@ -22,8 +22,9 @@ export class Scheduler {
             return 0
         })
         for (let job of this.jobs) {
-            let x = job.run()            
-            console.log(x)
+            if (job.shouldRun()) {
+                job.run()
+            }
         }
     }
 }
