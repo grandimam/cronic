@@ -1,4 +1,4 @@
-export enum Unit {
+enum Unit {
     DAY,
     HOUR,
     SECOND,
@@ -8,7 +8,7 @@ export enum Unit {
 type JobFunc = (() => void) | null
 
 
-export class Job {
+class Job {
     public func: JobFunc
     public unit: Unit | null
     public lastRun: number | null
@@ -68,4 +68,43 @@ export class Job {
             this.func()
         }
     }
+}
+
+class Scheduler {
+
+    private jobs: Job[]
+
+    constructor() {
+        this.jobs = []
+    }
+
+    public every(interval: number | null = null, unit: Unit | null = null): Job {
+        let job = new Job(interval, unit)
+        this.jobs.push(job)
+        return job
+    }
+
+    runPending() {
+        this.jobs.sort((a, b) => {
+            if (a !== null && b !== null && a.nextRun !== null && b.nextRun !== null) {
+                return a.nextRun - b.nextRun
+            }
+            return 0
+        })
+        for (let job of this.jobs) {
+            let x = job.run()            
+            console.log(x)
+        }
+    }
+}
+
+function hello() {
+    console.log('Hello!')
+}
+
+const schedule = new Scheduler()
+schedule.every(1, Unit.SECOND).do(hello)
+
+while (true) {
+    schedule.runPending()
 }
