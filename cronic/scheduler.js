@@ -1,15 +1,13 @@
-import { Job, Unit } from "./job"
+import { Job } from "./job"
 
 export class Scheduler {
-
-    private jobs: Job[]
 
     constructor() {
         this.jobs = []
     }
 
-    public every(interval: number | null = null): Job {
-        let job = new Job(interval)
+    every(interval) {
+        const job = new Job(interval)
         this.jobs.push(job)
         return job
     }
